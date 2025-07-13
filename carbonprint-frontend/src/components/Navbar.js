@@ -1,34 +1,40 @@
-// import React from "react";
-// import { Link } from "react-router-dom";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../context/userContext";
 
-// const Navbar = () => {
-//   return (
-//     <nav className="w-full h-16 bg-green-700 text-white flex justify-between items-center px-6 shadow-md">
-//       {/* Logo that links to homepage */}
-//       <Link
-//         to="/"
-//         className="text-xl font-bold hover:scale-110 transition-transform"
-//       >
-//         CarbonPrint 🌱
-//       </Link>
+const Navbar = () => {
+  const location = useLocation();
+  const { user } = useAuth();
 
-//       {/* Profile section as a link to /profile */}
-//       <Link
-//         to="/profile"
-//         className="flex items-center space-x-3 cursor-pointer"
-//       >
-//         <p className="text-sm leading-none text-gray-100 hover:text-gray-300 transition-colors duration-200 hidden md:block">
-//           Hello, Shivam
-//         </p>
+  const hideOut = ["/login", "/signup"];
+  if (hideOut.includes(location.pathname)) return null;
 
-//         <img
-//           src="https://ui-avatars.com/api/?name=S+G"
-//           alt="Profile"
-//           className="w-8 h-8 rounded-full border border-white shadow-sm transition-transform duration-300 hover:scale-110"
-//         />
-//       </Link>
-//     </nav>
-//   );
-// };
+  return (
+    <nav className="w-full h-16 bg-green-700 text-white flex justify-between items-center px-6 shadow-md">
+      {/* Logo */}
+      <Link
+        to="/"
+        className="text-xl font-bold hover:scale-110 transition-transform"
+      >
+        CarbonPrint 🌱
+      </Link>
 
-// export default Navbar;
+      {/* User Info */}
+      {user && (
+        <Link
+          to="/profile"
+          className="flex items-center space-x-3 cursor-pointer"
+        >
+          <p className="text-sm hidden md:block">Hello, {user.firstname}</p>
+          <img
+            src={`https://ui-avatars.com/api/?name=${user.firstname}+${user.lastname}&background=random`}
+            alt="Profile"
+            className="w-8 h-8 rounded-full border border-white shadow-sm transition-transform duration-300 hover:scale-110"
+          />
+        </Link>
+      )}
+    </nav>
+  );
+};
+
+export default Navbar;

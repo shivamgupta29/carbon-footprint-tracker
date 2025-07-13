@@ -16,12 +16,28 @@ const addEmissionData = async (req, res) => {
       foodDetails,
       lpgDetails,
     } = req.body;
+
     const total =
       (electricity || 0) +
       (water || 0) +
       (transport || 0) +
       (food || 0) +
       (LPG || 0);
+
+    // ✅ Check userId presence
+    if (!req.userId) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized. No userId found." });
+    }
+
+    console.log("📩 Incoming Emission:", {
+      userId: req.userId,
+      total,
+      electricityDetails,
+      transportDetails,
+    });
+
     const newActivity = new Activity({
       userId: req.userId,
       electricity,
@@ -36,16 +52,23 @@ const addEmissionData = async (req, res) => {
       foodDetails,
       lpgDetails,
     });
+
     await newActivity.save();
-    res
-      .status(201)
-      .json({ message: "Activity Added Successully", activity: newActivity });
+    console.log("✅ Activity saved:", newActivity);
+
+    return res.status(201).json({
+      message: "Activity Added Successfully",
+      activity: newActivity,
+    });
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Failed to add Activity", error: err.message });
+    console.error("❌ Error adding emission activity:", err);
+    return res.status(500).json({
+      message: "Failed to add Activity",
+      error: err.message,
+    });
   }
 };
+
 //@desc Get all emission activity for logged in user
 //@route GET /api/emission
 //access Private
@@ -176,12 +199,35 @@ const getEmissionByDate = async (req, res) => {
       },
     });
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        message: "Failed to fetch emission for the date",
-        error: err.message,
-      });
+    res.status(500).json({
+      message: "Failed to fetch emission for the date",
+      error: err.message,
+    });
+  }
+};
+const getTodaysEmission = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+
+    const todayData = await Activity.findOne({
+      userId,
+      createdAt: { $gte: start, $lte: end },
+    }).sort({ createdAt: -1 });
+
+    if (!todayData) {
+      return res.status(404).json({ message: "No emissions logged today" });
+    }
+
+    res.status(200).json(todayData);
+  } catch (err) {
+    console.error("Error fetching today's emissions:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 export {
@@ -189,4 +235,5 @@ export {
   getEmissionData,
   getEmissionSummary,
   getEmissionByDate,
+  getTodaysEmission,
 };

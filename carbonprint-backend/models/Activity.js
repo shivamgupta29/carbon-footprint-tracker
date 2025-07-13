@@ -17,11 +17,11 @@ const activitySchema = new mongoose.Schema(
     food: { type: Number, default: 0 },
     LPG: { type: Number, default: 0 },
     total: { type: Number, default: 0 },
-    electricityDetails: { type: Object, default: 0 },
-    waterDetails: { type: Object, default: 0 },
-    transportDetails: { type: Object, default: 0 },
-    foodDetails: { type: Object, default: 0 },
-    lpgDetails: { type: Object, default: 0 },
+    electricityDetails: { type: Object, default: {} },
+    waterDetails: { type: Object, default: {} },
+    transportDetails: { type: Object, default: {} },
+    foodDetails: { type: Object, default: {} },
+    lpgDetails: { type: Object, default: {} },
   },
   { timestamps: true }
 );

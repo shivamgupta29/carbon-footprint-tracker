@@ -1,13 +1,13 @@
-// import React, { createContext, useState } from "react";
+import { createContext, useState } from "react";
 
-// export const EmissionContext = createContext();
+export const EmissionContext = createContext();
 
-// export const EmissionProvider = ({ children }) => {
-//   const [emissions, setEmissions] = useState(null); // null or { electricity, water, ... }
+export const EmissionProvider = ({ children }) => {
+  const [emissions, setEmissions] = useState(null);
 
-//   return (
-//     <EmissionContext.Provider value={{ emissions, setEmissions }}>
-//       {children}
-//     </EmissionContext.Provider>
-//   );
-// };
+  return (
+    <EmissionContext.Provider value={{ emissions, setEmissions }}>
+      {children}
+    </EmissionContext.Provider>
+  );
+};

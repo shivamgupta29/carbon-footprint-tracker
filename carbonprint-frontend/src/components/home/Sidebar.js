@@ -21,3 +21,30 @@
 //   );
 // };
 // export default Sidebar;
+import { Link } from "react-router-dom";
+const Sidebar = () => {
+  return (
+    <div className="w-64 bg-green-600 text-white p-4 min-h-screen">
+      <h2 className="text-xl font-bold mb-4">Menu</h2>
+      <ul className="space-y-2">
+        <li>
+          <Link to="/dashboard" className="hover:underline">
+            🏠 Dashboard
+          </Link>
+        </li>
+        <li>
+          <Link to="/profile" className="hover:underline">
+            👤 Profile
+          </Link>
+        </li>
+        <li>
+          <Link to="/about" className="hover:underline">
+            ℹ️ About
+          </Link>
+        </li>
+      </ul>
+    </div>
+  );
+};
+
+export default Sidebar;
